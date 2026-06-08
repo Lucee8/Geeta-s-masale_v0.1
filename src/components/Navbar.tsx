@@ -72,9 +72,8 @@ export default function Navbar({
           >
             {!logoError ? (
               <div className="flex items-center gap-3">
-            <img src={logo} alt="Geeta's Logo" className="h-8 sm:h-9 w-auto object-contain transition-all hover:scale-[1.05]"
-              onError={() => setLogoError(true)} />
-              
+               <img src={logo} alt="Geeta's Logo" className="w-auto object-contain transition-all duration-300 hover:scale-[1.05]"
+  style={{ height: isScrolled ? '90px' : '100px' }} onError={() => setLogoError(true)} referrerPolicy="no-referrer" />
                 <div className="flex flex-col leading-none select-none">
                   <span className="font-sans text-xs font-black tracking-widest text-[#A61B1B] uppercase pb-0.5">
                     GEETA'S
