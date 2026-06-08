@@ -158,7 +158,7 @@ export default function SpiceLoader({ onComplete }: SpiceLoaderProps) {
             }}
           >
             <img
-              src="src/assets/images/logo.png"
+              src="assets/images/logo.png"
               alt="Geeta's Masale Logo"
               className="w-52 object-contain"
               style={{

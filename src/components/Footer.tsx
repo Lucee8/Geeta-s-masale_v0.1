@@ -45,7 +45,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               {!logoError ? (
                 <div className="bg-white/95 px-3.5 py-2.5 rounded-xl mr-3 shadow-[0_4px_12px_rgba(0,0,0,0.15)] flex items-center justify-center">
                   <img
-                    src="https://ik.imagekit.io/9f6w6a0wf/logo.png.png"
+                    src="assets/images/logo.png" 
                     alt="Geeta's Logo"
                     className="h-8 sm:h-9 w-auto object-contain transition-all hover:scale-[1.05]"
                     onError={() => setLogoError(true)}

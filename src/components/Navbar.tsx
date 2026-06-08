@@ -72,7 +72,7 @@ export default function Navbar({
             {!logoError ? (
               <div className="flex items-center gap-3">
                 <img
-                  src="src/assets/images/logo.png"
+                  src="assets/images/logo.png"
                   alt="Geeta's Logo"
                   className="w-auto object-contain transition-all duration-300 hover:scale-[1.05]"
                   style={{ height: isScrolled ? '90px' : '100px' }}
