@@ -49,7 +49,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                     src={logo}
                     alt="Geeta's Logo"
                     className="w-auto object-contain transition-all duration-300 hover:scale-[1.05]"
-                    style={{ height: '90px' }}
+                    style={{ height: '120px' }}
                     onError={() => setLogoError(true)}
                     referrerPolicy="no-referrer"
                   />
