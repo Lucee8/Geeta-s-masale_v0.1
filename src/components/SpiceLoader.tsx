@@ -161,7 +161,7 @@ export default function SpiceLoader({ onComplete }: SpiceLoaderProps) {
             <img
               src={logo}
               alt="Geeta's Masale Logo"
-              className="w-52 object-contain"
+              className="w-60 object-contain"
               style={{
                 filter: 'drop-shadow(0 0 24px rgba(255,200,100,0.4)) drop-shadow(0 4px 20px rgba(0,0,0,0.4))',
               }}
