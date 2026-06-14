@@ -5,8 +5,17 @@
 
 import { Product, Recipe, Testimonial, GalleryItem } from '../types';
 import malvaniSundayMasala from '../assets/images/Masale/malvani-spl-sunday-masala.webp';
+import frymasala from '../assets/images/Masale/Malvani fish fry masala.webP';
+import Biryanimasala from '../assets/images/Masale/Biryani masala.webP';
+import Kashmirimirchi from '../assets/images/Masale/Kashmiri mirchi powder copy.webP';
+import specialbhajka from '../assets/images/Masale/Malvani special bhajka masala.webP';
+import muttonmasala from '../assets/images/Masale/malvani special mutton masala.webP';
+import currymasala from '../assets/images/Masale/malvani fish curry masala.webP';
+import kandaLasunMasala from '../assets/images/Masale/Kanda lasun masala.webP';
+import specialmisal from '../assets/images/Masale/special misal masala.webP';
+import shengdanachutney from '../assets/images/Masale/shengdana chutney.webP';
 import kandaLasunMasala from '../assets/images/Masale/Malvani fish fry masala.webP';
-
+import kandaLasunMasala from '../assets/images/Masale/Malvani fish fry masala.webP';
 
 export const CATEGORIES = [
   {
@@ -78,7 +87,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Mix with lime juice or kokum water to make a paste. Generously coat fish slices, dust with semolina, and shallow fry.',
     shelfLife: '12 Months',
     notes: 'Specially crafted for Pomfret, Surmai, Bangda, and prawns.',
-    image: kandaLasunMasala     
+    image: frymasala     
   },
   {
     id: 'm3',
@@ -92,7 +101,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Add during rice boiling and sprinkle between layers of rice and meat/vegetables before dum sealing.',
     shelfLife: '12 Months',
     notes: 'Magnificently suited for both authentic vegetable and slow-cooked meat biryanis.',
-    image: 'https://images.unsplash.com/photo-1543083477-4f7f02b77884?w=600&auto=format&fit=crop&q=80'
+    image: Biryanimasala
   },
   {
     id: 'm4',
@@ -106,7 +115,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Incorporate in slow curries, subzis, and marinades for a brilliant, photogenic crimson hue without burning heat.',
     shelfLife: '12 Months',
     notes: 'Dual action: works as an organic visual glaze and a mild warm aroma enhancer.',
-    image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&auto=format&fit=crop&q=80'
+    image: Kashmirimirchi
   },
   {
     id: 'm5',
@@ -120,7 +129,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Use as a thickening and flavoring agent directly in veg sprouts, local shev bhaji, or dry mutton thick gravies.',
     shelfLife: '12 Months',
     notes: 'Extremely authentic. Delivers the classic dark brown coastal gravy look.',
-    image: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=600&auto=format&fit=crop&q=80'
+    image: specialbhajka
   },
   {
     id: 'm6',
@@ -134,7 +143,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Whisk with yogurt/oil and marinate raw mutton for 2 hours, then saute on high heat before adding water to cook.',
     shelfLife: '12 Months',
     notes: 'Produces a thin, fiery oil layer (tarri) on top of curries.',
-    image: 'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?w=600&auto=format&fit=crop&q=80'
+    image: muttonmasala
   },
   {
     id: 'm7',
@@ -148,7 +157,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Grind this masala with fresh wet coconut and water, boil with Kokum/Tamarind juice, and add raw fish at the very end.',
     shelfLife: '12 Months',
     notes: 'Replicates the taste of Malvani beach-side shacks.',
-    image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&auto=format&fit=crop&q=80'
+    image: currymasala
   },
   {
     id: 'm8',
@@ -161,7 +170,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Ready to consume. Best enjoyed alongside freshly made hot Bajra/Jowar Bhakris, Vada Pav, or simply mixed with oil over warm rice.',
     shelfLife: '6 Months',
     notes: 'No preservatives, very low moisture content for enduring crunch.',
-    image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=600&auto=format&fit=crop&q=80'
+    image: kandaLasunMasala
   },
   {
     id: 'm9',
@@ -175,7 +184,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Add to everyday dry stir-fries, egg curries, potato rassa, and spicy street-style gravies.',
     shelfLife: '12 Months',
     notes: 'Saves preparation time; provides instant garlicky depth to any everyday dish.',
-    image: 'https://images.unsplash.com/photo-1615485500704-8e990f8300f7?w=600&auto=format&fit=crop&q=80'
+    image: kandaLasunMasala
   },
   {
     id: 'm10',
@@ -189,7 +198,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Add during the bean sprout boiling and oil-separation phase. Serves with farsan, dry potatoes, and soft pav.',
     shelfLife: '12 Months',
     notes: 'Specially engineered for high heat tolerance without turning bitter.',
-    image: 'https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=600&auto=format&fit=crop&q=80'
+    image: specialmisal
   },
   {
     id: 'm11',
@@ -203,7 +212,7 @@ export const PRODUCTS: Product[] = [
     usage: 'Pair with flatbreads, curd-rice, idlis, parathas or use in morning sandwich rolls for instant zinc and protein boosts.',
     shelfLife: '6 Months',
     notes: 'Dry, granular texture. Made of export-quality, sweet-kernel peanuts.',
-    image: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600&auto=format&fit=crop&q=80'
+    image: shengdanachutney
   },
 
   // Pith Category
