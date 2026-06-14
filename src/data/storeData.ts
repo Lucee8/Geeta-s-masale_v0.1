@@ -5,7 +5,7 @@
 
 import { Product, Recipe, Testimonial, GalleryItem } from '../types';
 import malvaniSundayMasala from '../assets/images/Masale/malvani spl Sunday masala.webp';
-import kandaLasunMasala from '../assets/images/Masale/Malvani fish fry masala.webP';
+import kandaLasunMasala from '../assets/images/Masale/malvani-spl-sunday-masala.webp';
 
 
 export const CATEGORIES = [
