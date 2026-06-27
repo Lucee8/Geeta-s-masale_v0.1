@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "code": "GEETA50",
+    "discountType": "Fixed",
+    "value": 50,
+    "minOrderAmount": 399,
+    "active": true
+  },
+  {
+    "id": 2,
+    "code": "KONKAN10",
+    "discountType": "Percentage",
+    "value": 10,
+    "minOrderAmount": 500,
+    "active": true
+  }
+]

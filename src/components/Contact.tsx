@@ -29,11 +29,27 @@ export default function Contact() {
     'Wholesale Bulk Supply Inquiry'
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) return;
 
-    // Compose custom text template
+    // Save contact message to MongoDB/SQL database for admin dashboard
+    try {
+      await fetch('/api/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          product: formData.selectedProduct,
+          message: formData.message || 'No additional text specified.'
+        })
+      });
+    } catch (err) {
+      console.error("Failed to sync message with backend api:", err);
+    }
+
+    // Compose custom text template for instant notification
     const textMsg = `Hello Geeta's Masale! I am sending an inquiry from your website:
 - *Name*: ${formData.name}
 - *Phone Number*: ${formData.phone}
@@ -53,7 +69,7 @@ Please get back to me with terms and details. Thank you!`;
   };
 
   return (
-    <section id="contact" className="py-24 bg-white text-slate-800 relative">
+    <section id="contact" className="py-24 bg-white text-slate-800 relative snap-start scroll-mt-20">
       <div className="absolute top-0 right-0 w-full h-1 bg-[#A61B1B]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-25">

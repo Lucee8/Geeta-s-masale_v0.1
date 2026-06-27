@@ -16,6 +16,8 @@ interface ProductSectionProps {
   onSelectCategory: (category: string) => void;
   onAddToInquiry: (product: Product, quantity: number) => void;
   inquiryList: { product: Product; quantity: number }[];
+  productsList?: Product[];
+  categoriesList?: any[];
 }
 
 export default function ProductSection({
@@ -25,24 +27,31 @@ export default function ProductSection({
   onSelectCategory,
   onAddToInquiry,
   inquiryList,
+  productsList,
+  categoriesList,
 }: ProductSectionProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [modalQuantity, setModalQuantity] = useState(1);
   const [sortBy, setSortBy] = useState<'mrp-asc' | 'mrp-desc' | 'name' | 'default'>('default');
 
   // Categories list
-  const filterTabs = [
-    { id: 'all', label: 'All Products' },
-    { id: 'Masale', label: 'Masalas & Chutneys' },
-    { id: 'Pith', label: 'Traditional Flours' },
-    { id: 'Malvani products', label: 'Meva & Snacks' },
-    { id: 'Laddoos', label: 'Handmade Laddoos' },
-    { id: 'Kaju', label: 'Malvan Cashews' },
-  ];
+  const filterTabs = categoriesList && categoriesList.length > 0
+    ? [
+        { id: 'all', label: 'All Products' },
+        ...categoriesList.map(c => ({ id: c.id, label: c.name }))
+      ]
+    : [
+        { id: 'all', label: 'All Products' },
+        { id: 'Masale', label: 'Masalas & Chutneys' },
+        { id: 'Pith', label: 'Traditional Flours' },
+        { id: 'Malvani products', label: 'Meva & Snacks' },
+        { id: 'Laddoos', label: 'Handmade Laddoos' },
+        { id: 'Kaju', label: 'Malvan Cashews' },
+      ];
 
   // Process sorting & filtering
   const filteredProducts = useMemo(() => {
-    let result = [...PRODUCTS];
+    let result = productsList && productsList.length > 0 ? [...productsList] : [...PRODUCTS];
 
     // Category filter
     if (selectedCategory && selectedCategory !== 'all') {
@@ -99,7 +108,7 @@ Please confirm availability and sharing banking details for packing. Thanks!`;
   };
 
   return (
-    <section id="products" className="py-24 bg-[#FAF9F6] text-slate-800 relative min-h-screen">
+    <section id="products" className="py-24 bg-[#FAF9F6] text-slate-800 relative min-h-screen snap-start scroll-mt-20">
       {/* Decorative floral elements */}
       <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-[#A61B1B]/5 to-transparent pointer-events-none" />
 
@@ -119,113 +128,7 @@ Please confirm availability and sharing banking details for packing. Thanks!`;
           </p>
         </div>
 
-        {/* Filter Tabs, Search bar, Sorting Bar (Dynamic Controls Grid) */}
-        <div className="bg-white rounded-3xl p-6 shadow-md border border-[#A61B1B]/10 mb-12 space-y-6">
-          
-          {/* Top row: Tab Buttons scrolling */}
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4 overflow-x-auto no-scrollbar">
-            <div className="flex items-center space-x-2 shrink-0">
-              {filterTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => onSelectCategory(tab.id)}
-                  className={`px-4 py-2 rounded-full font-sans text-xs sm:text-sm font-bold tracking-wide uppercase transition-all duration-300 cursor-pointer ${
-                    selectedCategory.toLowerCase() === tab.id.toLowerCase()
-                      ? 'bg-[#A61B1B] text-white shadow-md'
-                      : 'bg-slate-100/50 text-slate-700 hover:bg-slate-100'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Indicator count */}
-            <span className="text-xs font-mono text-slate-400 uppercase shrink-0 hidden md:block">
-              Showing {filteredProducts.length} Items
-            </span>
-          </div>
-
-          {/* Bottom row: Search filter box & Order sorting controller */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-            
-            {/* Inline Search */}
-            <div className="md:col-span-8 relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                <Search className="w-4 h-4" />
-              </span>
-              <input
-                type="text"
-                placeholder="Filter spices by keyword (e.g. 'Fish', 'Kaju', 'Laddoo')..."
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full bg-slate-50 text-slate-800 text-sm pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-[#A61B1B] focus:bg-white transition-all placeholder-slate-400"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => onSearchChange('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-
-            {/* Sorting List Option selector */}
-            <div className="md:col-span-4 relative flex items-center space-x-2">
-              <span className="text-xs font-mono text-gray-500 uppercase shrink-0">Sort By:</span>
-              <div className="relative w-full">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="w-full bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider pl-3 pr-8 py-3 rounded-xl border border-slate-200 appearance-none focus:outline-none focus:ring-1 focus:ring-[#A61B1B]"
-                >
-                  <option value="default">Default Catalog Arrangement</option>
-                  <option value="mrp-asc">Price: Low to High</option>
-                  <option value="mrp-desc">Price: High to Low</option>
-                  <option value="name">Name: A to Z</option>
-                </select>
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                  <ArrowUpDown className="w-3.5 h-3.5" />
-                </span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Active Search & Category tags highlights if filtering applies */}
-          {(selectedCategory !== 'all' || searchQuery) && (
-            <div className="flex flex-wrap gap-2 items-center text-xs pt-1">
-              <span className="font-mono text-gray-400 uppercase">Active Filters:</span>
-              {selectedCategory !== 'all' && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#A61B1B]/10 text-[#A61B1B] font-bold">
-                  Category: {selectedCategory}
-                  <button onClick={() => onSelectCategory('all')} className="ml-1.5 focus:outline-none hover:text-red-800">
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
-              {searchQuery && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#A61B1B]/10 text-[#A61B1B] font-bold">
-                  Search: "{searchQuery}"
-                  <button onClick={() => onSearchChange('')} className="ml-1.5 focus:outline-none hover:text-red-800">
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
-              <button
-                onClick={() => {
-                  onSelectCategory('all');
-                  onSearchChange('');
-                }}
-                className="text-xs text-[#A61B1B] hover:underline font-semibold ml-2"
-              >
-                Clear all filters
-              </button>
-            </div>
-          )}
-
-        </div>
+        {/* Categories are handled elegantly via the 3D category cards in the Hero section above */}
 
         {/* Empty Search State fallback */}
         {filteredProducts.length === 0 && (
@@ -265,10 +168,10 @@ Please confirm availability and sharing banking details for packing. Thanks!`;
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.4 }}
-                  className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl border border-gray-100 flex flex-col justify-between group h-[480px] sm:h-[600px]"
+                  className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl border border-gray-100 flex flex-col justify-between group h-full"
                 >
                   {/* Photo container with zoom and badge */}
-                  <div className="relative h-60 sm:h-80 bg-white overflow-hidden shrink-0 p-3 sm:p-5 flex items-center justify-center">
+                  <div className="relative h-48 sm:h-68 bg-white overflow-hidden shrink-0 p-3 sm:p-4 flex items-center justify-center">
                     <img
                       src={p.image}
                       alt={p.name}
@@ -379,15 +282,15 @@ Please confirm availability and sharing banking details for packing. Thanks!`;
             {/* Modal Card content */}
             <motion.div
               layoutId={`product-${selectedProduct.id}`}
-              className="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 z-10 flex flex-col md:flex-row max-h-[90vh] md:max-h-none overflow-y-auto"
+              className="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 z-10 flex flex-col md:flex-row h-[90vh] md:h-auto max-h-[90vh] md:max-h-[85vh]"
             >
               
               {/* Left Column: Photo Presentation */}
-              <div className="md:w-1/2 relative bg-white h-72 md:h-auto min-h-[320px] md:min-h-[480px] p-6 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-gray-150">
+              <div className="w-full md:w-1/2 shrink-0 md:shrink relative bg-white h-48 sm:h-60 md:h-auto md:min-h-[480px] p-4 md:p-6 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-gray-150">
                 <img
                   src={selectedProduct.image}
                   alt={selectedProduct.name}
-                  className="w-full h-full max-h-[380px] object-contain drop-shadow-md rounded-lg"
+                  className="w-full h-full max-h-[120px] sm:max-h-[180px] md:max-h-[380px] object-contain drop-shadow-md rounded-lg"
                   referrerPolicy="no-referrer"
                 />
                 
@@ -396,9 +299,9 @@ Please confirm availability and sharing banking details for packing. Thanks!`;
 
                 <div className="absolute bottom-4 left-4 right-4 text-white z-10 text-left">
                   <span className="text-[10px] font-mono tracking-widest text-[#FFF] uppercase bg-[#A61B1B]/90 px-2 py-0.5 rounded-full inline-block mb-1">
-                     {selectedProduct.category} Collection
+                    {selectedProduct.category} Collection
                   </span>
-                  <h3 className="font-sans text-xl sm:text-2xl font-black uppercase text-white leading-tight">
+                  <h3 className="font-sans text-lg sm:text-2xl font-black uppercase text-white leading-tight">
                     {selectedProduct.name}
                   </h3>
                 </div>
@@ -406,24 +309,26 @@ Please confirm availability and sharing banking details for packing. Thanks!`;
                 {/* Close Button on Image for mobile */}
                 <button
                   onClick={handleCloseModal}
-                  className="md:hidden absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/40 text-white backdrop-blur-sm cursor-pointer"
+                  className="md:hidden absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/40 text-white backdrop-blur-sm cursor-pointer z-10"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Right Column: Key Details scroll */}
-              <div className="md:w-1/2 p-6 md:p-8 flex flex-col justify-between overflow-y-auto">
+              {/* Right Column: Key Details scroll with Sticky CTAs */}
+              <div className="flex-1 md:w-1/2 flex flex-col min-h-0 overflow-hidden relative bg-white">
+                
+                {/* Desktop Close Button (sticky, doesn't scroll) */}
                 <button
                   onClick={handleCloseModal}
-                  className="hidden md:flex absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 text-slate-800 transition-all cursor-pointer"
+                  className="hidden md:flex absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 text-slate-800 transition-all cursor-pointer z-20"
                   aria-label="Close"
                 >
-                  <X className="w-5 h-5 animate-pulse" />
+                  <X className="w-5 h-5" />
                 </button>
 
-                {/* Info details pile */}
-                <div className="space-y-5">
+                {/* Scrollable details wrapper */}
+                <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-5">
                   <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                     <span className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-[#A61B1B]/10 to-[#E86A17]/10 text-[#A61B1B] text-xs font-mono font-black uppercase">
                       {selectedProduct.weight} pack / ₹{selectedProduct.mrp} MRP
@@ -469,8 +374,8 @@ Please confirm availability and sharing banking details for packing. Thanks!`;
                   )}
                 </div>
 
-                {/* Bottom line: Quantity Counter + CTA Actions */}
-                <div className="mt-8 pt-6 border-t border-gray-100 grid grid-cols-1 gap-4 shrink-0">
+                {/* Bottom line: Sticky Action Panel (Quantity Counter + CTA Actions) */}
+                <div className="p-6 md:px-8 border-t border-gray-100 bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.08)] shrink-0 space-y-4 z-10">
                   
                   {/* Quantity selector row */}
                   <div className="flex items-center justify-between bg-gray-50 px-4 py-2.5 rounded-xl">

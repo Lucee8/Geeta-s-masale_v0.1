@@ -13,7 +13,7 @@ export default function RecipeSection() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
   return (
-    <section id="recipes" className="py-24 bg-white text-slate-800 relative">
+    <section id="recipes" className="py-24 bg-white text-slate-800 relative snap-start scroll-mt-20">
       {/* Wave bottom decoration */}
       <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#A61B1B]/5 to-transparent" />
 

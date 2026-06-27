@@ -19,10 +19,10 @@ export default function Gallery() {
     : GALLERY_PHOTOS.filter(p => p.category.toLowerCase() === selectedFolder.toLowerCase());
 
   return (
-    <section id="gallery" className="py-24 bg-[#A61B1B] text-white relative overflow-hidden">
+    <section id="gallery" className="py-24 bg-white text-slate-800 relative overflow-hidden border-t border-slate-100 snap-start scroll-mt-20">
       {/* Decorative vectors */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-tr from-white/10 to-transparent rounded-bl-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-white/5 to-transparent rounded-tr-full pointer-events-none" />
+      <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-tr from-[#A61B1B]/5 to-transparent rounded-bl-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-[#A61B1B]/3 to-transparent rounded-tr-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-25">
         
@@ -31,15 +31,15 @@ export default function Gallery() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-rose-100 text-xs font-mono tracking-widest uppercase"
+            className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#A61B1B]/10 border border-[#A61B1B]/15 text-[#A61B1B] text-xs font-mono tracking-widest uppercase"
           >
-            <Camera className="w-4 h-4 text-rose-100" />
+            <Camera className="w-4 h-4 text-[#A61B1B]" />
             <span>EXQUISITE VISUAL BOUTIQUE</span>
           </motion.div>
-          <h2 className="font-sans text-4xl sm:text-5xl font-black tracking-tight uppercase">
-            Geeta’s <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-rose-100 to-rose-300">Photo Gallery</span>
+          <h2 className="font-sans text-4xl sm:text-5xl font-black tracking-tight uppercase text-slate-900">
+            Geeta’s <span className="text-[#A61B1B]">Photo Gallery</span>
           </h2>
-          <p className="text-rose-100/80 text-sm sm:text-base font-light font-sans max-w-xl mx-auto">
+          <p className="text-slate-600 text-sm sm:text-base font-light font-sans max-w-xl mx-auto">
             Take a visual tour of our original store in Kasal, the meticulously arranged wood-finished shelves, and mouth-watering culinary preparations.
           </p>
         </div>
@@ -52,8 +52,8 @@ export default function Gallery() {
               onClick={() => setSelectedFolder(folder)}
               className={`px-4.5 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all duration-300 border cursor-pointer ${
                 selectedFolder.toLowerCase() === folder.toLowerCase()
-                  ? 'bg-white text-[#A61B1B] border-white shadow-md font-extrabold'
-                  : 'bg-white/5 text-rose-100 border-white/10 hover:bg-white/10'
+                  ? 'bg-[#A61B1B] text-white border-[#A61B1B] shadow-md font-extrabold'
+                  : 'bg-slate-50 text-slate-700 border-slate-200/60 hover:bg-slate-100'
               }`}
             >
               {folder}
@@ -73,7 +73,7 @@ export default function Gallery() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4 }}
                 onClick={() => setSelectedPhoto(photo.image)}
-                className="group relative rounded-2xl overflow-hidden h-72 border border-white/10 cursor-pointer shadow-lg"
+                className="group relative rounded-2xl overflow-hidden h-72 border border-slate-200/60 cursor-pointer shadow-lg"
               >
                 {/* Image */}
                 <img
@@ -89,22 +89,22 @@ export default function Gallery() {
                 {/* Info Text overlays */}
                 <div className="absolute bottom-5 left-5 right-5 flex justify-between items-end">
                   <div>
-                    <span className="text-[9px] font-mono tracking-widest text-rose-200 uppercase">
-                      {photo.category} Folder
+                    <span className="text-[9px] font-mono tracking-widest text-[#A61B1B] bg-white px-2 py-0.5 rounded uppercase font-bold">
+                      {photo.category}
                     </span>
-                    <h3 className="text-sm font-bold uppercase text-white tracking-wide mt-1 line-clamp-1">
+                    <h3 className="text-sm font-bold uppercase text-white tracking-wide mt-2.5 line-clamp-1">
                       {photo.title}
                     </h3>
                   </div>
 
                   {/* Zoom Badge icon */}
-                  <div className="p-2 rounded-xl bg-white text-[#A61B1B] opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 shadow-lg">
+                  <div className="p-2 rounded-xl bg-[#A61B1B] text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 shadow-lg">
                     <ZoomIn className="w-4 h-4" />
                   </div>
                 </div>
 
                 {/* Glowing borders highlight */}
-                <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/40 rounded-2xl transition-all duration-300" />
+                <div className="absolute inset-0 border-2 border-white/0 group-hover:border-[#A61B1B]/45 rounded-2xl transition-all duration-300" />
               </motion.div>
             ))}
           </AnimatePresence>

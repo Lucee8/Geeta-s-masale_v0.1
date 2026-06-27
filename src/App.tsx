@@ -4,12 +4,10 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import SpiceLoader from './components/SpiceLoader';
+import { motion } from 'motion/react';
 import FloatingSpices from './components/FloatingSpices';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import CategoryGrid from './components/CategoryGrid';
 import ProductSection from './components/ProductSection';
 import Heritage from './components/Heritage';
 import RecipeSection from './components/RecipeSection';
@@ -19,14 +17,45 @@ import Gallery from './components/Gallery';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import InquiryDrawer from './components/InquiryDrawer';
+import AdminDashboard from './components/AdminDashboard';
 import { Product } from './types';
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [inquiryBag, setInquiryBag] = useState<{ product: Product; quantity: number }[]>([]);
   const [inquiryDrawerOpen, setInquiryDrawerOpen] = useState(false);
+
+  // Full-stack dynamic data lists
+  const [productsList, setProductsList] = useState<Product[]>([]);
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchStoreData = async () => {
+    try {
+      const [prodRes, catRes] = await Promise.all([
+        fetch('/api/products'),
+        fetch('/api/categories')
+      ]);
+      if (prodRes.ok) {
+        const prodData = await prodRes.json();
+        setProductsList(prodData);
+      }
+      if (catRes.ok) {
+        const catData = await catRes.json();
+        setCategoriesList(catData);
+      }
+    } catch (e) {
+      console.error("Failed to load products/categories from express DB APIs:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStoreData();
+  }, [adminOpen]);
 
   // Smooth scroll helper
   const handleScrollToSection = (sectionId: string) => {
@@ -79,74 +108,75 @@ export default function App() {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  // If Admin panel dashboard is activated, direct viewport to dashboard workspace
+  if (adminOpen) {
+    return <AdminDashboard onClose={() => setAdminOpen(false)} />;
+  }
+
   return (
-    <>
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <SpiceLoader key="loader" onComplete={() => setLoading(false)} />
-        ) : (
-          <motion.div
-            key="main-app-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="font-sans antialiased bg-[#FAF9F6] text-slate-900 selection:bg-[#A61B1B]/15 selection:text-[#A61B1B] min-h-screen relative overflow-x-hidden"
-          >
-            {/* Absolute Particle floating background layer */}
-            <FloatingSpices />
+    <motion.div
+      key="main-app-content"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      className="font-sans antialiased bg-[#FAF9F6] text-slate-900 selection:bg-[#A61B1B]/15 selection:text-[#A61B1B] min-h-screen relative overflow-x-hidden"
+    >
+      {/* Absolute Particle floating background layer */}
+      <FloatingSpices />
 
-            {/* Sticky Navigation Bar */}
-            <Navbar
-              onNavigate={handleScrollToSection}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              inquiryCount={inquiryBag.reduce((total, item) => total + item.quantity, 0)}
-              onOpenInquiry={() => setInquiryDrawerOpen(true)}
-            />
+      {/* Sticky Navigation Bar */}
+      <Navbar
+        onNavigate={handleScrollToSection}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        inquiryCount={inquiryBag.reduce((total, item) => total + item.quantity, 0)}
+        onOpenInquiry={() => setInquiryDrawerOpen(true)}
+      />
 
-            {/* Main view sections */}
-            <Hero
-              onExploreClick={() => handleScrollToSection('products')}
-              onWhatsAppClick={handleWhatsAppGeneralClick}
-            />
+      {/* Main view sections */}
+      <Hero
+        onExploreClick={() => handleScrollToSection('products')}
+        onWhatsAppClick={handleWhatsAppGeneralClick}
+        onSelectCategory={handleCategorySelection}
+      />
 
-            <CategoryGrid onSelectCategory={handleCategorySelection} />
+      <ProductSection
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+        onAddToInquiry={handleAddToInquiry}
+        inquiryList={inquiryBag}
+        productsList={productsList}
+        categoriesList={categoriesList}
+      />
 
-            <ProductSection
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-              onAddToInquiry={handleAddToInquiry}
-              inquiryList={inquiryBag}
-            />
+      <Heritage />
 
-            <Heritage />
+      <RecipeSection />
 
-            <RecipeSection />
+      <WhyChooseUs />
 
-            <WhyChooseUs />
+      <Reviews />
 
-            <Reviews />
+      <Gallery />
 
-            <Gallery />
+      <Contact />
 
-            <Contact />
+      <Footer
+        onNavigate={handleScrollToSection}
+        onOpenAdmin={() => setAdminOpen(true)}
+      />
 
-            <Footer onNavigate={handleScrollToSection} />
+      {/* Shopping Inquiry side drawer */}
+      <InquiryDrawer
+        isOpen={inquiryDrawerOpen}
+        onClose={() => setInquiryDrawerOpen(false)}
+        inquiryList={inquiryBag}
+        onRemoveItem={handleRemoveInquiryItem}
+        onUpdateQuantity={handleUpdateInquiryItemQuantity}
+      />
 
-            {/* Shopping Inquiry side drawer */}
-            <InquiryDrawer
-              isOpen={inquiryDrawerOpen}
-              onClose={() => setInquiryDrawerOpen(false)}
-              inquiryList={inquiryBag}
-              onRemoveItem={handleRemoveInquiryItem}
-              onUpdateQuantity={handleUpdateInquiryItemQuantity}
-            />
-
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+    </motion.div>
   );
 }
