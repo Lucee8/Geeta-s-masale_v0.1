@@ -251,6 +251,44 @@ const fileLock = new FileLock();
  * Reads a JSON file, returning defaultData if absent or corrupt.
  * Uses atomic file locking to prevent concurrent read/write conflicts.
  */
+function readDataFileSync<T>(filename: string, defaultData: T): T {
+  assertSafeFilename(filename);
+  const filePath = path.join(DATA_DIR, filename);
+
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(content) as T;
+  } catch (err: unknown) {
+    if (isNodeError(err) && err.code === 'ENOENT') {
+      writeDataFileSync(filename, defaultData);
+      return defaultData;
+    }
+    if (err instanceof SyntaxError) {
+      console.error(
+        `[DB] Corrupt JSON in ${filename}, restoring defaults:`,
+        err.message
+      );
+      writeDataFileSync(filename, defaultData);
+      return defaultData;
+    }
+    throw err;
+  }
+}
+
+function writeDataFileSync<T>(filename: string, data: T): void {
+  assertSafeFilename(filename);
+  assertSerializable(data);
+  const filePath = path.join(DATA_DIR, filename);
+  const tempPath = `${filePath}.tmp`;
+  const serialized = JSON.stringify(data, null, 2);
+
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(tempPath, serialized, 'utf-8');
+  fs.rmSync(filePath, { force: true });
+  fs.renameSync(tempPath, filePath);
+  console.debug(`[DB] Written: ${filename} (${serialized.length} bytes)`);
+}
+
 async function readDataFile<T>(filename: string, defaultData: T): Promise<T> {
   assertSafeFilename(filename);
   const filePath = path.join(DATA_DIR, filename);
@@ -493,8 +531,8 @@ const DEFAULT_BANNERS: Banner[] = [
 // ---------------------------------------------------------------------------
 
 // --- Admins ---
-export async function getAdmins(): Promise<Admin[]> {
-  const admins = await readDataFile<Admin[]>('admins.json', []);
+export function getAdmins(): Admin[] {
+  const admins = readDataFileSync<Admin[]>('admins.json', []);
 
   if (admins.length === 0) {
     // Read initial password from environment — never hardcode in source
@@ -508,7 +546,7 @@ export async function getAdmins(): Promise<Admin[]> {
       throw new Error('Initial admin password must be at least 12 characters');
     }
 
-    const passwordHash = await bcrypt.hash(initialPassword, BCRYPT_ROUNDS);
+    const passwordHash = bcrypt.hashSync(initialPassword, BCRYPT_ROUNDS);
     const superAdmin: Admin = {
       id: 1,
       username: 'admin',
@@ -518,79 +556,79 @@ export async function getAdmins(): Promise<Admin[]> {
       createdAt: new Date().toISOString(),
     };
 
-    await writeDataFile('admins.json', [superAdmin]);
+    writeDataFileSync('admins.json', [superAdmin]);
     return [superAdmin];
   }
 
   return admins;
 }
 
-export async function saveAdmins(admins: Admin[]): Promise<void> {
-  await writeDataFile('admins.json', admins);
+export function saveAdmins(admins: Admin[]): void {
+  writeDataFileSync('admins.json', admins);
 }
 
 // --- Categories ---
-export const getCategories = (): Promise<Category[]> =>
-  readDataFile('categories.json', DEFAULT_CATEGORIES);
+export const getCategories = (): Category[] =>
+  readDataFileSync('categories.json', DEFAULT_CATEGORIES);
 
-export const saveCategories = (c: Category[]): Promise<void> =>
-  writeDataFile('categories.json', c);
+export const saveCategories = (c: Category[]): void =>
+  writeDataFileSync('categories.json', c);
 
 // --- Products ---
-export const getProducts = (): Promise<Product[]> =>
-  readDataFile('products.json', DEFAULT_PRODUCTS);
+export const getProducts = (): Product[] =>
+  readDataFileSync('products.json', DEFAULT_PRODUCTS);
 
-export const saveProducts = (p: Product[]): Promise<void> =>
-  writeDataFile('products.json', p);
+export const saveProducts = (p: Product[]): void =>
+  writeDataFileSync('products.json', p);
 
 // --- Orders ---
-export const getOrders = (): Promise<Order[]> =>
-  readDataFile('orders.json', []);
+export const getOrders = (): Order[] =>
+  readDataFileSync('orders.json', []);
 
-export const saveOrders = (o: Order[]): Promise<void> =>
-  writeDataFile('orders.json', o);
+export const saveOrders = (o: Order[]): void =>
+  writeDataFileSync('orders.json', o);
 
 // --- Payments ---
-export const getPayments = (): Promise<Payment[]> =>
-  readDataFile('payments.json', []);
+export const getPayments = (): Payment[] =>
+  readDataFileSync('payments.json', []);
 
-export const savePayments = (p: Payment[]): Promise<void> =>
-  writeDataFile('payments.json', p);
+export const savePayments = (p: Payment[]): void =>
+  writeDataFileSync('payments.json', p);
 
 // --- Reviews ---
-export const getReviews = (): Promise<Review[]> =>
-  readDataFile('reviews.json', DEFAULT_REVIEWS);
+export const getReviews = (): Review[] =>
+  readDataFileSync('reviews.json', DEFAULT_REVIEWS);
 
-export const saveReviews = (r: Review[]): Promise<void> =>
-  writeDataFile('reviews.json', r);
+export const saveReviews = (r: Review[]): void =>
+  writeDataFileSync('reviews.json', r);
 
 // --- Contact Messages ---
-export const getContactMessages = (): Promise<ContactMessage[]> =>
-  readDataFile('contact_messages.json', []);
+export const getContactMessages = (): ContactMessage[] =>
+  readDataFileSync('contact_messages.json', []);
 
-export const saveContactMessages = (m: ContactMessage[]): Promise<void> =>
-  writeDataFile('contact_messages.json', m);
+export const saveContactMessages = (m: ContactMessage[]): void =>
+  writeDataFileSync('contact_messages.json', m);
 
 // --- Website Settings ---
-export const getWebsiteSettings = (): Promise<WebsiteSettings> =>
-  readDataFile('website_settings.json', DEFAULT_SETTINGS);
+export const getWebsiteSettings = (): WebsiteSettings =>
+  readDataFileSync('website_settings.json', DEFAULT_SETTINGS);
 
-export const saveWebsiteSettings = (s: WebsiteSettings): Promise<void> =>
-  writeDataFile('website_settings.json', s);
+export const saveWebsiteSettings = (s: WebsiteSettings): void =>
+  writeDataFileSync('website_settings.json', s);
 
 // --- Banners ---
-export const getBanners = (): Promise<Banner[]> =>
-  readDataFile('banners.json', DEFAULT_BANNERS);
+export const getBanners = (): Banner[] =>
+  readDataFileSync('banners.json', DEFAULT_BANNERS);
 
-export const saveBanners = (b: Banner[]): Promise<void> =>
-  writeDataFile('banners.json', b);
+export const saveBanners = (b: Banner[]): void =>
+  writeDataFileSync('banners.json', b);
 
 // --- Coupons ---
-export const getCoupons = (): Promise<Coupon[]> =>
-  readDataFile('coupons.json', DEFAULT_COUPONS);
+export const getCoupons = (): Coupon[] =>
+  readDataFileSync('coupons.json', DEFAULT_COUPONS);
 
-export const saveCoupons = (c: Coupon[]): Promise<void> =>
-  writeDataFile('coupons.json', c);
+export const saveCoupons = (c: Coupon[]): void =>
+  writeDataFileSync('coupons.json', c);
 
 // ---------------------------------------------------------------------------
 // Convenience Atomic Helpers

@@ -10,7 +10,9 @@ import apiRouter from './server/api';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT || 3000);
+  const HOST = process.env.HOST || '127.0.0.1';
+  const DISPLAY_HOST = HOST === '0.0.0.0' ? 'localhost' : HOST;
 
   // Use body parsing with responsive byte limits for raw base64 uploads
   app.use(express.json({ limit: '15mb' }));
@@ -46,8 +48,8 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Geeta's Spices server running on http://0.0.0.0:${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`Geeta's Spices server running on http://${DISPLAY_HOST}:${PORT}`);
   });
 }
 
